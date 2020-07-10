@@ -120,7 +120,9 @@ data RestCallErrorCode = RestCallErrorCode Int T.Text T.Text
 restCall :: (FromJSON a, Request (r a)) => DiscordHandle -> r a -> IO (Either RestCallErrorCode a)
 restCall h r = do empty <- isEmptyMVar (discordHandleLibraryError h)
                   if not empty
-                  then pure (Left (RestCallErrorCode 400 "Library Stopped Working" ""))
+                  then do
+                    err <- readMVar (discordHandleLibraryError h)
+                    pure (Left (RestCallErrorCode 400 "Library Stopped Working" err))
                   else do
                       resp <- writeRestCall (discordHandleRestChan h) r
                       case resp of
