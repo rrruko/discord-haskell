@@ -89,19 +89,19 @@ instance FromJSON ReactionRemoveInfo where
 
 data PresenceInfo = PresenceInfo
   { presenceUserId  :: UserId
-  , presenceRoles   :: [RoleId]
+  , presenceRoles   :: Maybe [RoleId]
   -- , presenceGame :: Maybe Activity
-  , presenceGuildId :: GuildId
-  , presenceStatus  :: T.Text
+  , presenceGuildId :: Maybe GuildId
+  , presenceStatus  :: Maybe T.Text
   } deriving (Show, Eq, Ord)
 
 instance FromJSON PresenceInfo where
   parseJSON = withObject "PresenceInfo" $ \o ->
     PresenceInfo <$> (o .: "user" >>= (.: "id"))
-                 <*> o .: "roles"
+                 <*> o .:? "roles"
               -- <*> o .: "game"
-                 <*> o .: "guild_id"
-                 <*> o .: "status"
+                 <*> o .:? "guild_id"
+                 <*> o .:? "status"
 
 data TypingInfo = TypingInfo
   { typingUserId    :: UserId
