@@ -25,8 +25,7 @@ data Auth = Auth T.Text
 -- | Get the raw token formatted for use with the websocket gateway
 authToken :: Auth -> T.Text
 authToken (Auth tok) = let token = T.strip tok
-                           bot = if "Bot " `T.isPrefixOf` token then "" else "Bot "
-                       in bot <> token
+                       in token
 
 -- | A unique integer identifier. Can be used to calculate the creation date of an entity.
 newtype Snowflake = Snowflake Word64
